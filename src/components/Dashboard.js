@@ -1,7 +1,6 @@
-// src/components/Dashboard.js
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { addWidget, addCategory, removeWidget } from '../redux/widgetsSlice';
+import { addWidget, addCategory, removeWidget, setCategories } from '../redux/widgetsSlice';
 import SlideInForm from './SlideInForm';
 import './Dashboard.css';
 import { FaPlus, FaFolderPlus, FaTimes, FaSearch } from 'react-icons/fa';
@@ -18,8 +17,20 @@ const Dashboard = () => {
   const [categoryId, setCategoryId] = useState(categories[0]?.id || '');
 
   const [categoryName, setCategoryName] = useState('');
-
   const [searchTerm, setSearchTerm] = useState('');
+
+  // Load categories from localStorage on component mount
+  useEffect(() => {
+    const storedCategories = localStorage.getItem('categories');
+    if (storedCategories) {
+      dispatch(setCategories(JSON.parse(storedCategories)));
+    }
+  }, [dispatch]);
+
+  // Update localStorage whenever categories change
+  useEffect(() => {
+    localStorage.setItem('categories', JSON.stringify(categories));
+  }, [categories]);
 
   const handleAddWidget = () => {
     const newWidget = { id: Date.now(), name: widgetName, text: widgetText };
@@ -55,21 +66,21 @@ const Dashboard = () => {
       <div className="header">
         <h1>Dashboard</h1>
         <div className="actions">
+          <div className="search-bar">
+            <FaSearch />
+            <input
+              type="text"
+              placeholder="Search"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+          </div>
           <button onClick={() => setWidgetFormOpen(true)} className="icon-button">
             <FaPlus /> Add Widget
           </button>
           <button onClick={() => setCategoryFormOpen(true)} className="icon-button">
             <FaFolderPlus /> Add Category
           </button>
-          <div className="search-bar">
-            <FaSearch />
-            <input
-              type="text"
-              placeholder="Search widgets and categories"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
-          </div>
         </div>
       </div>
 
@@ -105,7 +116,7 @@ const Dashboard = () => {
           value={widgetName}
           onChange={(e) => setWidgetName(e.target.value)}
         />
-        <textarea
+        <textarea className="text area"
           placeholder="Widget Text"
           value={widgetText}
           onChange={(e) => setWidgetText(e.target.value)}
@@ -117,7 +128,7 @@ const Dashboard = () => {
             </option>
           ))}
         </select>
-        <button onClick={handleAddWidget}>Add Widget</button>
+        <button className="icon-button" onClick={handleAddWidget}>Confirm</button>
       </SlideInForm>
 
       <SlideInForm isOpen={isCategoryFormOpen} closeForm={() => setCategoryFormOpen(false)}>
@@ -128,7 +139,7 @@ const Dashboard = () => {
           value={categoryName}
           onChange={(e) => setCategoryName(e.target.value)}
         />
-        <button onClick={handleAddCategory}>Add Category</button>
+        <button className="icon-button" onClick={handleAddCategory}>Confirm</button>
       </SlideInForm>
     </div>
   );

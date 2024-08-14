@@ -1,8 +1,7 @@
-// src/redux/widgetsSlice.js
 import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
-  categories: [
+  categories: JSON.parse(localStorage.getItem('categories')) || [
     {
       id: 1,
       name: 'CSPM Executive Dashboard',
@@ -42,9 +41,12 @@ const widgetsSlice = createSlice({
         category.widgets = category.widgets.filter((widget) => widget.id !== widgetId);
       }
     },
+    setCategories: (state, action) => {
+      state.categories = action.payload;
+    },
   },
 });
 
-export const { addWidget, addCategory, removeWidget } = widgetsSlice.actions;
+export const { addWidget, addCategory, removeWidget, setCategories } = widgetsSlice.actions;
 
 export default widgetsSlice.reducer;
