@@ -19,7 +19,7 @@ const Dashboard = () => {
   const [categoryName, setCategoryName] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
 
-  // Load categories from localStorage on component mount
+  
   useEffect(() => {
     const storedCategories = localStorage.getItem('categories');
     if (storedCategories) {
@@ -27,7 +27,7 @@ const Dashboard = () => {
     }
   }, [dispatch]);
 
-  // Update localStorage whenever categories change
+
   useEffect(() => {
     localStorage.setItem('categories', JSON.stringify(categories));
   }, [categories]);
@@ -47,7 +47,7 @@ const Dashboard = () => {
     setCategoryName('');
   };
 
-  // Filter categories and widgets based on search term
+  
   const filteredCategories = categories
     .map((category) => ({
       ...category,

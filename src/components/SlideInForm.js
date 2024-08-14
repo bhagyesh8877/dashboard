@@ -1,4 +1,4 @@
-// src/components/SlideInForm.js
+
 import React from 'react';
 import './SlideInForm.css';
 import { IoClose } from 'react-icons/io5';
